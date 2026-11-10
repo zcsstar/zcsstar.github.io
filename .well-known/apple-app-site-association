@@ -1,0 +1,12 @@
+{
+  "applinks": {
+    "details": [
+      {
+        "appIDs": ["YR5T87RWNU.com.cheez.chisha"],
+        "components": [
+          { "/": "/what-to-eat-content/d/*", "comment": "吃啥 / What to Eat? dish links" }
+        ]
+      }
+    ]
+  }
+}
