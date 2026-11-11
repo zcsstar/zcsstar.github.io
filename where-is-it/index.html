@@ -4,104 +4,537 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <link rel="icon" href="favicon.png" />
-    <title>放哪儿 / Where Is It?</title>
+    <title>放哪儿 / Where Is It? — 东西放哪了，几秒找回</title>
     <meta
       name="description"
-      content="放哪儿：拍下来，圈出来，几秒找到。Where Is It?: snap it, circle the spot, find it in seconds." />
+      content="放哪儿：拍下物品和放它的地方，圈出具体位置，要用时几秒找回。Where Is It?: snap the item and its spot, circle where it is, find it in seconds." />
+    <meta property="og:title" content="放哪儿 / Where Is It?" />
+    <meta
+      property="og:description"
+      content="东西放哪了？拍下来，圈出来，几秒找回。Snap it, circle the spot, find it in seconds." />
+    <meta property="og:image" content="https://zcsstar.github.io/where-is-it/img/icon.png" />
+    <meta name="apple-itunes-app" content="app-id=6830024258" />
+    <meta name="theme-color" content="#fff9f2" />
     <style>
+      :root {
+        --cream: #fff9f2;
+        --surface: #ffffff;
+        --text: #204d38;
+        --muted: #557062;
+        --primary: #2b8452;
+        --brand: #4caf7a;
+        --tint: #e5f3ea;
+        --tint-text: #1f6e45;
+        --line: #e8efe9;
+        --accent: #ffa766;
+      }
       html,
       body {
         margin: 0;
-        background: #fff9f2;
-        color: #204d38;
+        background: var(--cream);
+        color: var(--text);
         font-family:
           -apple-system, BlinkMacSystemFont, 'PingFang SC', 'Microsoft YaHei', 'Segoe UI', Roboto,
           'Helvetica Neue', Arial, sans-serif;
         line-height: 1.65;
         font-size: 16px;
+        -webkit-text-size-adjust: 100%;
       }
       main {
-        max-width: 720px;
+        max-width: 960px;
         margin: 0 auto;
-        padding: 2rem 1rem 4rem;
+        padding: 1rem 16px 3rem;
+      }
+      .bar {
+        display: flex;
+        justify-content: flex-end;
+      }
+      .lang {
+        border: 1px solid var(--line);
+        background: var(--surface);
+        color: var(--text);
+        border-radius: 999px;
+        padding: 0.35rem 0.9rem;
+        min-height: 36px;
+        font: inherit;
+        font-size: 0.9rem;
+        cursor: pointer;
+      }
+      .hero {
+        text-align: center;
+        padding: 1.25rem 0 0.5rem;
+      }
+      body {
+        background:
+          radial-gradient(
+              circle at 50% 150px,
+              rgba(76, 175, 122, 0.18),
+              rgba(76, 175, 122, 0) 300px
+            )
+            no-repeat,
+          var(--cream);
+      }
+      .hero img {
+        width: 112px;
+        height: 112px;
+        border-radius: 26px;
+        box-shadow: 0 10px 28px rgba(32, 77, 56, 0.2);
       }
       h1 {
-        font-size: 1.75rem;
-        margin: 0 0 1rem;
+        font-size: 2.25rem;
+        margin: 1rem 0 0.25rem;
+        letter-spacing: 0.02em;
       }
-      h2 {
-        font-size: 1.1rem;
-        margin: 2rem 0 0.5rem;
+      .tagline {
+        font-size: 1.3rem;
+        font-weight: 800;
+        margin: 0 0 0.75rem;
       }
-      a {
-        color: #1f6e45;
+      .tagline em {
+        font-style: normal;
+        background: linear-gradient(transparent 62%, rgba(255, 167, 102, 0.45) 62%);
+      }
+      .lead {
+        max-width: 36rem;
+        margin: 0 auto 1.5rem;
+        color: var(--muted);
       }
       .stores {
         display: flex;
         flex-wrap: wrap;
-        gap: 0.75rem;
-        margin: 1rem 0;
+        justify-content: center;
+        gap: 10px;
       }
       .store {
-        display: inline-block;
-        background: #1f6e45;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.5rem;
+        background: var(--primary);
         color: #ffffff;
-        font-weight: 700;
+        font-weight: 800;
         text-decoration: none;
-        padding: 0.75rem 1.4rem;
-        border-radius: 14px;
-        min-height: 44px;
+        padding: 0.8rem 1.4rem;
+        border-radius: 16px;
+        min-height: 48px;
+        min-width: 200px;
         box-sizing: border-box;
+        box-shadow: 0 6px 16px rgba(43, 132, 82, 0.25);
       }
-      .store:focus-visible {
-        outline: 3px solid #204d38;
+      .store.secondary {
+        background: var(--tint);
+        color: var(--tint-text);
+        box-shadow: none;
+      }
+      .store svg {
+        width: 20px;
+        height: 20px;
+        fill: currentColor;
+        flex: 0 0 auto;
+      }
+      .store:focus-visible,
+      .lang:focus-visible {
+        outline: 3px solid var(--text);
         outline-offset: 2px;
       }
-      .muted {
-        color: #557062;
+      .note {
+        color: var(--muted);
         font-size: 0.9rem;
+        margin: 0.75rem 0 0;
+      }
+      .steps {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 10px;
+        margin: 2rem 0 0;
+        padding: 0;
+        list-style: none;
+        counter-reset: step;
+      }
+      .steps li {
+        background: var(--surface);
+        border-radius: 18px;
+        padding: 0.9rem 0.6rem;
+        text-align: center;
+        font-weight: 700;
+        font-size: 0.95rem;
+        line-height: 1.4;
+      }
+      .steps li::before {
+        counter-increment: step;
+        content: counter(step);
+        display: block;
+        width: 30px;
+        height: 30px;
+        line-height: 30px;
+        margin: 0 auto 0.4rem;
+        border-radius: 50%;
+        background: var(--tint);
+        color: var(--tint-text);
+        font-weight: 800;
+      }
+      .steps small {
+        display: block;
+        font-weight: 400;
+        color: var(--muted);
+        font-size: 0.82rem;
+        margin-top: 0.2rem;
+      }
+      .shots {
+        display: flex;
+        gap: 12px;
+        overflow-x: auto;
+        padding: 1.75rem 16px 0.75rem;
+        margin: 0 -16px;
+        scroll-snap-type: x mandatory;
+        scroll-padding: 0 16px;
+        -webkit-overflow-scrolling: touch;
+      }
+      .shots img {
+        flex: 0 0 auto;
+        width: min(220px, 60vw);
+        height: auto;
+        border-radius: 18px;
+        scroll-snap-align: start;
+        box-shadow: 0 6px 18px rgba(32, 77, 56, 0.12);
+      }
+      .hint {
+        text-align: center;
+        color: var(--muted);
+        font-size: 0.85rem;
+        margin: 0;
+      }
+      h2 {
+        font-size: 1.35rem;
+        margin: 2.25rem 0 0.75rem;
+        text-align: center;
+      }
+      .features {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+        gap: 12px;
+        padding: 0;
+        margin: 0;
+        list-style: none;
+      }
+      .features li {
+        background: var(--surface);
+        border-radius: 18px;
+        padding: 1rem 1.1rem;
+        border-top: 4px solid var(--brand);
+      }
+      .features strong {
+        display: block;
+        font-size: 1.05rem;
+        margin-bottom: 0.25rem;
+      }
+      .features span {
+        color: var(--muted);
+      }
+      .price {
+        background: var(--tint);
+        border-radius: 18px;
+        padding: 1rem 1.1rem;
+        margin: 1.25rem 0 0;
+        text-align: center;
+      }
+      .price strong {
+        color: var(--tint-text);
+      }
+      .support h2 {
+        text-align: left;
+        font-size: 1.1rem;
+      }
+      a {
+        color: var(--tint-text);
+      }
+      .store,
+      .store:visited {
+        text-decoration: none;
+      }
+      .muted {
+        color: var(--muted);
+        font-size: 0.9rem;
+      }
+      [hidden] {
+        display: none !important;
+      }
+      @media (min-width: 720px) {
+        .shots {
+          flex-wrap: wrap;
+          justify-content: center;
+          overflow: visible;
+          margin: 0;
+          padding: 2rem 0 0.75rem;
+        }
+        .shots img {
+          width: 200px;
+        }
+        .hint {
+          display: none;
+        }
+      }
+      @media (max-width: 380px) {
+        .steps {
+          grid-template-columns: 1fr;
+        }
       }
     </style>
   </head>
   <body>
+    <svg width="0" height="0" style="position: absolute" aria-hidden="true">
+      <symbol id="apple" viewBox="0 0 24 24">
+        <path
+          d="M16.37 12.6c-.02-2.2 1.8-3.26 1.88-3.31-1.03-1.5-2.62-1.7-3.18-1.73-1.35-.14-2.64.8-3.33.8-.69 0-1.74-.78-2.86-.76-1.47.02-2.83.86-3.59 2.17-1.53 2.65-.39 6.58 1.1 8.73.73 1.05 1.6 2.23 2.73 2.19 1.1-.04 1.51-.71 2.84-.71 1.32 0 1.7.71 2.86.69 1.18-.02 1.93-1.07 2.65-2.13.84-1.22 1.18-2.4 1.2-2.46-.03-.01-2.3-.88-2.3-3.48zM14.2 6.13c.6-.73 1.01-1.75.9-2.76-.87.04-1.92.58-2.54 1.31-.56.65-1.05 1.68-.92 2.68.97.07 1.96-.49 2.56-1.23z" />
+      </symbol>
+      <symbol id="play" viewBox="0 0 24 24">
+        <path d="M4 2.8v18.4c0 .5.5.8.9.6L21 12.6c.4-.2.4-.9 0-1.1L4.9 2.2c-.4-.2-.9.1-.9.6z" />
+      </symbol>
+    </svg>
     <main>
-      <h1>放哪儿 / Where Is It?</h1>
-      <section lang="zh-CN">
-        <p>
-          「放哪儿」帮你记住东西放在哪儿：拍下物品和放它的地方，用手指圈出具体位置，几个月后搜一下，几秒找到。记录只加密保存在你的手机上，不用注册，不用联网。
+      <div class="bar">
+        <button class="lang" type="button" id="lang">English</button>
+      </div>
+
+      <section lang="zh-CN" data-lang="zh">
+        <div class="hero">
+          <img src="img/icon.png" alt="放哪儿图标" width="112" height="112" />
+          <h1>放哪儿</h1>
+          <p class="tagline">东西放哪了？<em>几秒找回。</em></p>
+          <p class="lead">
+            拍下物品和放它的地方，在照片上圈出具体位置，写个名字就记好。要用的时候搜一下，马上看到当初放在哪。
+          </p>
+          <div class="stores">
+            <a class="store" href="https://apps.apple.com/app/id6830024258"
+              ><svg aria-hidden="true"><use href="#apple" /></svg>在 App Store 下载</a
+            >
+            <a
+              class="store secondary"
+              href="https://play.google.com/store/apps/details?id=com.cheez.fangnaer"
+              ><svg aria-hidden="true"><use href="#play" /></svg>在 Google Play 下载</a
+            >
+          </div>
+          <p class="note">iPhone 和安卓版即将上架；安卓版正在 Google Play 测试中。</p>
+        </div>
+
+        <ol class="steps">
+          <li>拍下物品<small>写个名字就行</small></li>
+          <li>拍下位置<small>圈出在哪一格</small></li>
+          <li>搜一下<small>几秒看到在哪</small></li>
+        </ol>
+
+        <div class="shots" aria-label="App 截图">
+          <img src="img/zh-1.webp" alt="几秒记录，几秒找回" width="480" height="1041" />
+          <img src="img/zh-2.webp" alt="拍下物品，记住放哪儿" width="480" height="1041" />
+          <img src="img/zh-3.webp" alt="圈出位置，一眼看清" width="480" height="1041" />
+          <img
+            src="img/zh-4.webp"
+            alt="想找什么，直接搜索"
+            width="480"
+            height="1041"
+            loading="lazy" />
+          <img
+            src="img/zh-5.webp"
+            alt="本地加密，保护隐私"
+            width="480"
+            height="1041"
+            loading="lazy" />
+          <img
+            src="img/zh-6.webp"
+            alt="按房间和柜子，一层层找"
+            width="480"
+            height="1041"
+            loading="lazy" />
+        </div>
+        <p class="hint">← 左右滑动看更多 →</p>
+
+        <h2>备用钥匙、说明书、那个小配件……</h2>
+        <ul class="features">
+          <li>
+            <strong>几秒记好</strong
+            ><span>拍下物品，再拍下放它的地方，写个名字就能保存，分类和备注都可以不填。</span>
+          </li>
+          <li>
+            <strong>圈出具体位置</strong
+            ><span>用圈、箭头或文字标出在哪一格、哪个盒子。原图不变，标记随时可改。</span>
+          </li>
+          <li>
+            <strong>几秒找到</strong
+            ><span>搜名称、位置或备注，边输入边出结果；也能按房间、柜子一层层找。</span>
+          </li>
+          <li>
+            <strong>拿走、放回，点一下</strong
+            ><span>拿走、放回、换地方都只要点一下，点错可以撤销，每件物品都有自己的历史。</span>
+          </li>
+          <li>
+            <strong>只在你的手机上，加密保存</strong
+            ><span
+              >不用注册，没有服务器，开发者也看不到你的内容。照片不进系统相册，可用面容 ID
+              或指纹解锁。</span
+            >
+          </li>
+          <li>
+            <strong>换手机也不丢</strong
+            ><span>导出用你自己的密码加密的备份，换手机后恢复；删除的物品在回收站保留 30 天。</span>
+          </li>
+        </ul>
+        <p class="price">
+          免费记录 <strong>20 件</strong>，所有功能都能用。<strong>Pro 一次买断</strong
+          >，不限数量、没有广告。
         </p>
-        <p class="stores">
-          <a class="store" href="https://apps.apple.com/app/id6830024258">在 App Store 下载</a>
-          <a class="store" href="https://play.google.com/store/apps/details?id=com.cheez.fangnaer"
-            >在 Google Play 下载</a
-          >
-        </p>
-        <h2>支持与反馈</h2>
-        <p>
-          有问题或建议，请发邮件至
-          <a href="mailto:nzcheez@gmail.com">nzcheez@gmail.com</a>。
-        </p>
-        <p><a href="privacy/">隐私政策</a></p>
+
+        <div class="support">
+          <h2>支持与反馈</h2>
+          <p>
+            有问题或建议，请发邮件至
+            <a href="mailto:nzcheez@gmail.com">nzcheez@gmail.com</a>，或在 App 的「设置 ›
+            功能建议」里告诉我们。
+          </p>
+          <p><a href="privacy/">隐私政策</a></p>
+        </div>
       </section>
-      <section lang="en">
-        <h2>Support</h2>
-        <p>
-          Where Is It? remembers where you put things: a photo of the item and of its spot, the
-          place circled with your finger, found again in seconds months later. Your records stay on
-          your phone, encrypted — no account, no internet needed. For questions or feedback, email
-          <a href="mailto:nzcheez@gmail.com">nzcheez@gmail.com</a>.
+
+      <section lang="en" data-lang="en" hidden>
+        <div class="hero">
+          <img src="img/icon.png" alt="Where Is It? icon" width="112" height="112" />
+          <h1>Where Is It?</h1>
+          <p class="tagline">Put it away. <em>Find it in seconds.</em></p>
+          <p class="lead">
+            Snap the item and the place you put it, circle the exact spot on the photo, give it a
+            name — saved. When you need it, search and see right where you left it.
+          </p>
+          <div class="stores">
+            <a class="store" href="https://apps.apple.com/app/id6830024258"
+              ><svg aria-hidden="true"><use href="#apple" /></svg>Download on the App Store</a
+            >
+            <a
+              class="store secondary"
+              href="https://play.google.com/store/apps/details?id=com.cheez.fangnaer"
+              ><svg aria-hidden="true"><use href="#play" /></svg>Get it on Google Play</a
+            >
+          </div>
+          <p class="note">Coming soon to iPhone and Android; the Android version is in testing.</p>
+        </div>
+
+        <ol class="steps">
+          <li>Snap the item<small>just give it a name</small></li>
+          <li>Snap its spot<small>circle where it is</small></li>
+          <li>Search<small>see it in seconds</small></li>
+        </ol>
+
+        <div class="shots" aria-label="Screenshots">
+          <img src="img/en-1.webp" alt="Save its spot. Find it fast." width="480" height="1041" />
+          <img src="img/en-2.webp" alt="Snap the item and its spot" width="480" height="1041" />
+          <img src="img/en-3.webp" alt="Circle the exact spot" width="480" height="1041" />
+          <img
+            src="img/en-4.webp"
+            alt="Search, and see where it is"
+            width="480"
+            height="1041"
+            loading="lazy" />
+          <img
+            src="img/en-5.webp"
+            alt="Encrypted on your phone"
+            width="480"
+            height="1041"
+            loading="lazy" />
+          <img
+            src="img/en-6.webp"
+            alt="Browse room by room"
+            width="480"
+            height="1041"
+            loading="lazy" />
+        </div>
+        <p class="hint">← Swipe for more →</p>
+
+        <h2>Spare keys, manuals, that little adapter…</h2>
+        <ul class="features">
+          <li>
+            <strong>Saved in seconds</strong
+            ><span
+              >Photograph the item, then its place, and give it a name. A category and notes are up
+              to you.</span
+            >
+          </li>
+          <li>
+            <strong>Circle the exact spot</strong
+            ><span
+              >Mark which shelf or box with a circle, an arrow or a word. The photo stays as it was;
+              marks can change any time.</span
+            >
+          </li>
+          <li>
+            <strong>Found in seconds</strong
+            ><span
+              >Search names, places or notes as you type — or browse room by room, cupboard by
+              cupboard.</span
+            >
+          </li>
+          <li>
+            <strong>Taken out, put back, one tap</strong
+            ><span
+              >Take it, put it back or move it with a tap, with undo; every item keeps its own
+              history.</span
+            >
+          </li>
+          <li>
+            <strong>Only on your phone, encrypted</strong
+            ><span
+              >No account and no server: the developer never sees your things. Photos stay out of
+              your gallery; unlock with Face ID or fingerprint.</span
+            >
+          </li>
+          <li>
+            <strong>Safe when you switch phones</strong
+            ><span
+              >Export a backup sealed with your own password and restore it on the new phone;
+              deleted items wait in the trash for 30 days.</span
+            >
+          </li>
+        </ul>
+        <p class="price">
+          Free for <strong>20 items</strong>, every feature included.
+          <strong>Pro, one purchase</strong>: no limit, no ads.
         </p>
-        <p class="stores">
-          <a class="store" href="https://apps.apple.com/app/id6830024258"
-            >Download on the App Store</a
-          >
-          <a class="store" href="https://play.google.com/store/apps/details?id=com.cheez.fangnaer"
-            >Get it on Google Play</a
-          >
-        </p>
-        <p><a href="privacy/#en">Privacy policy</a></p>
+
+        <div class="support">
+          <h2>Support</h2>
+          <p>
+            For questions or feedback, email
+            <a href="mailto:nzcheez@gmail.com">nzcheez@gmail.com</a>, or use Settings › Suggest a
+            feature in the app.
+          </p>
+          <p><a href="privacy/#en">Privacy policy</a></p>
+        </div>
       </section>
+
       <p class="muted">© 2026 Chi Zhang</p>
     </main>
+    <script>
+      // One language at a time: ?lang=, then the browser's, Chinese by default.
+      (function () {
+        var param = new URLSearchParams(location.search).get('lang');
+        var browser = (navigator.language || 'zh').toLowerCase();
+        var lang =
+          param === 'en' || param === 'zh' ? param : browser.indexOf('zh') === 0 ? 'zh' : 'en';
+        var button = document.getElementById('lang');
+        function show(next) {
+          lang = next;
+          document.documentElement.lang = lang === 'zh' ? 'zh-CN' : 'en';
+          document.querySelectorAll('[data-lang]').forEach(function (el) {
+            el.hidden = el.getAttribute('data-lang') !== lang;
+          });
+          button.textContent = lang === 'zh' ? 'English' : '中文';
+          document.title =
+            lang === 'zh'
+              ? '放哪儿 — 东西放哪了，几秒找回'
+              : 'Where Is It? — Find your stuff in seconds';
+        }
+        button.addEventListener('click', function () {
+          show(lang === 'zh' ? 'en' : 'zh');
+        });
+        show(lang);
+      })();
+    </script>
   </body>
 </html>
