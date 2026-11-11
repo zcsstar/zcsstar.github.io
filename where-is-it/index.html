@@ -36,6 +36,27 @@
       a {
         color: #1f6e45;
       }
+      .stores {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.75rem;
+        margin: 1rem 0;
+      }
+      .store {
+        display: inline-block;
+        background: #1f6e45;
+        color: #ffffff;
+        font-weight: 700;
+        text-decoration: none;
+        padding: 0.75rem 1.4rem;
+        border-radius: 14px;
+        min-height: 44px;
+        box-sizing: border-box;
+      }
+      .store:focus-visible {
+        outline: 3px solid #204d38;
+        outline-offset: 2px;
+      }
       .muted {
         color: #557062;
         font-size: 0.9rem;
@@ -48,6 +69,12 @@
       <section lang="zh-CN">
         <p>
           「放哪儿」帮你记住东西放在哪儿：拍下物品和放它的地方，用手指圈出具体位置，几个月后搜一下，几秒找到。记录只加密保存在你的手机上，不用注册，不用联网。
+        </p>
+        <p class="stores">
+          <a class="store" href="https://apps.apple.com/app/id6830024258">在 App Store 下载</a>
+          <a class="store" href="https://play.google.com/store/apps/details?id=com.cheez.fangnaer"
+            >在 Google Play 下载</a
+          >
         </p>
         <h2>支持与反馈</h2>
         <p>
@@ -63,6 +90,14 @@
           place circled with your finger, found again in seconds months later. Your records stay on
           your phone, encrypted — no account, no internet needed. For questions or feedback, email
           <a href="mailto:nzcheez@gmail.com">nzcheez@gmail.com</a>.
+        </p>
+        <p class="stores">
+          <a class="store" href="https://apps.apple.com/app/id6830024258"
+            >Download on the App Store</a
+          >
+          <a class="store" href="https://play.google.com/store/apps/details?id=com.cheez.fangnaer"
+            >Get it on Google Play</a
+          >
         </p>
         <p><a href="privacy/#en">Privacy policy</a></p>
       </section>
