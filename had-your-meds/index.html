@@ -1,0 +1,692 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="icon" href="favicon.png" />
+    <title>吃药没？/ Had Your Meds? — 全家的药，拍一下就记好</title>
+    <meta
+      name="description"
+      content="吃药没？拍下药盒和标签，在手机上读出药名和用法，配上中英参考译文，记进家里的药箱，按时提醒。Had Your Meds?: photograph a medicine label, check what it says with reference translations, keep your family's medicines and reminders in one place." />
+    <meta property="og:title" content="吃药没？/ Had Your Meds?" />
+    <meta
+      property="og:description"
+      content="全家的药，拍一下就记好。Your family's medicines, recorded with a photo." />
+    <meta property="og:image" content="https://zcsstar.github.io/had-your-meds/img/icon.png" />
+    <meta name="theme-color" content="#fff9f2" />
+    <style>
+      :root {
+        --cream: #fff9f2;
+        --surface: #ffffff;
+        --text: #1f2f4d;
+        --muted: #56637a;
+        --primary: #2f5fb8;
+        --tint: #e6eefb;
+        --tint-text: #234c93;
+        --line: #f0ebe3;
+        --attention: #fff1d6;
+        --attention-text: #8a5300;
+      }
+      html,
+      body {
+        margin: 0;
+        color: var(--text);
+        font-family:
+          -apple-system, BlinkMacSystemFont, 'PingFang SC', 'PingFang TC', 'Microsoft YaHei',
+          'Microsoft JhengHei', 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+        line-height: 1.65;
+        font-size: 16px;
+        -webkit-text-size-adjust: 100%;
+      }
+      body {
+        background:
+          radial-gradient(circle at 50% 150px, rgba(47, 95, 184, 0.16), rgba(47, 95, 184, 0) 300px)
+            no-repeat,
+          var(--cream);
+      }
+      main {
+        max-width: 960px;
+        margin: 0 auto;
+        padding: 1rem 16px 3rem;
+      }
+      .bar {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: flex-end;
+        gap: 6px;
+      }
+      .lang {
+        border: 1px solid var(--line);
+        background: var(--surface);
+        color: var(--text);
+        border-radius: 999px;
+        padding: 0.35rem 0.8rem;
+        min-height: 36px;
+        font: inherit;
+        font-size: 0.85rem;
+        cursor: pointer;
+      }
+      .lang[aria-pressed='true'] {
+        background: var(--tint);
+        color: var(--tint-text);
+        border-color: #9db7e8;
+        font-weight: 700;
+      }
+      .hero {
+        text-align: center;
+        padding: 1.25rem 0 0.5rem;
+      }
+      .hero img {
+        width: 112px;
+        height: 112px;
+        border-radius: 26px;
+        box-shadow: 0 10px 28px rgba(31, 47, 77, 0.2);
+      }
+      h1 {
+        font-size: 2.25rem;
+        margin: 1rem 0 0.25rem;
+        letter-spacing: 0.02em;
+      }
+      .tagline {
+        font-size: 1.3rem;
+        font-weight: 800;
+        margin: 0 0 0.75rem;
+      }
+      .tagline em {
+        font-style: normal;
+        background: linear-gradient(transparent 62%, rgba(255, 196, 92, 0.5) 62%);
+      }
+      .lead {
+        max-width: 36rem;
+        margin: 0 auto 1.5rem;
+        color: var(--muted);
+      }
+      .stores {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 10px;
+      }
+      .store {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.5rem;
+        background: var(--tint);
+        color: var(--tint-text);
+        font-weight: 800;
+        padding: 0.8rem 1.4rem;
+        border-radius: 16px;
+        min-height: 48px;
+        min-width: 200px;
+        box-sizing: border-box;
+      }
+      .store svg {
+        width: 20px;
+        height: 20px;
+        fill: currentColor;
+        flex: 0 0 auto;
+      }
+      .store small {
+        font-weight: 400;
+      }
+      .lang:focus-visible,
+      a:focus-visible {
+        outline: 3px solid var(--text);
+        outline-offset: 2px;
+      }
+      .note {
+        color: var(--muted);
+        font-size: 0.9rem;
+        margin: 0.75rem 0 0;
+      }
+      .steps {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 10px;
+        margin: 2rem 0 0;
+        padding: 0;
+        list-style: none;
+        counter-reset: step;
+      }
+      .steps li {
+        background: var(--surface);
+        border-radius: 18px;
+        padding: 0.9rem 0.6rem;
+        text-align: center;
+        font-weight: 700;
+        font-size: 0.95rem;
+        line-height: 1.4;
+      }
+      .steps li::before {
+        counter-increment: step;
+        content: counter(step);
+        display: block;
+        width: 30px;
+        height: 30px;
+        line-height: 30px;
+        margin: 0 auto 0.4rem;
+        border-radius: 50%;
+        background: var(--tint);
+        color: var(--tint-text);
+        font-weight: 800;
+      }
+      .steps small {
+        display: block;
+        font-weight: 400;
+        color: var(--muted);
+        font-size: 0.82rem;
+        margin-top: 0.2rem;
+      }
+      h2 {
+        font-size: 1.35rem;
+        margin: 2.25rem 0 0.75rem;
+        text-align: center;
+      }
+      .features {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+        gap: 12px;
+        padding: 0;
+        margin: 0;
+        list-style: none;
+      }
+      .features li {
+        background: var(--surface);
+        border-radius: 18px;
+        padding: 1rem 1.1rem;
+        border-top: 4px solid var(--primary);
+      }
+      .features strong {
+        display: block;
+        font-size: 1.05rem;
+        margin-bottom: 0.25rem;
+      }
+      .features span {
+        color: var(--muted);
+      }
+      .safety {
+        background: var(--attention);
+        color: var(--attention-text);
+        border-radius: 18px;
+        padding: 1rem 1.1rem;
+        margin: 1.25rem 0 0;
+      }
+      .safety strong {
+        display: block;
+        margin-bottom: 0.25rem;
+      }
+      .safety p {
+        margin: 0.25rem 0 0;
+      }
+      .price {
+        background: var(--tint);
+        border-radius: 18px;
+        padding: 1rem 1.1rem;
+        margin: 1.25rem 0 0;
+        text-align: center;
+      }
+      .price strong {
+        color: var(--tint-text);
+      }
+      .support h2 {
+        text-align: left;
+        font-size: 1.1rem;
+      }
+      a {
+        color: var(--tint-text);
+      }
+      .muted {
+        color: var(--muted);
+        font-size: 0.9rem;
+      }
+      [hidden] {
+        display: none !important;
+      }
+      @media (max-width: 380px) {
+        .steps {
+          grid-template-columns: 1fr;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <svg width="0" height="0" style="position: absolute" aria-hidden="true">
+      <symbol id="apple" viewBox="0 0 24 24">
+        <path
+          d="M16.37 12.6c-.02-2.2 1.8-3.26 1.88-3.31-1.03-1.5-2.62-1.7-3.18-1.73-1.35-.14-2.64.8-3.33.8-.69 0-1.74-.78-2.86-.76-1.47.02-2.83.86-3.59 2.17-1.53 2.65-.39 6.58 1.1 8.73.73 1.05 1.6 2.23 2.73 2.19 1.1-.04 1.51-.71 2.84-.71 1.32 0 1.7.71 2.86.69 1.18-.02 1.93-1.07 2.65-2.13.84-1.22 1.18-2.4 1.2-2.46-.03-.01-2.3-.88-2.3-3.48zM14.2 6.13c.6-.73 1.01-1.75.9-2.76-.87.04-1.92.58-2.54 1.31-.56.65-1.05 1.68-.92 2.68.97.07 1.96-.49 2.56-1.23z" />
+      </symbol>
+      <symbol id="play" viewBox="0 0 24 24">
+        <path d="M4 2.8v18.4c0 .5.5.8.9.6L21 12.6c.4-.2.4-.9 0-1.1L4.9 2.2c-.4-.2-.9.1-.9.6z" />
+      </symbol>
+    </svg>
+    <main>
+      <div class="bar" role="group" aria-label="Language">
+        <button class="lang" type="button" data-to="zh">简体中文</button>
+        <button class="lang" type="button" data-to="zh-tw">繁體（台灣）</button>
+        <button class="lang" type="button" data-to="zh-hk">繁體（香港）</button>
+        <button class="lang" type="button" data-to="en">English</button>
+      </div>
+
+      <!-- 简体中文 -->
+      <section id="zh" lang="zh-CN" data-lang="zh">
+        <div class="hero">
+          <img src="img/icon.png" alt="吃药没？图标" width="112" height="112" />
+          <h1>吃药没？</h1>
+          <p class="tagline">全家的药，<em>拍一下就记好。</em></p>
+          <p class="lead">
+            拍下药盒和标签，App
+            在手机上读出药名、规格、用法和有效期，配上中英对照的参考译文。你逐项确认后存进家里的药箱，再设好提醒——谁该吃什么、吃了没有，一眼就清楚。
+          </p>
+          <div class="stores">
+            <span class="store"
+              ><svg aria-hidden="true"><use href="#apple" /></svg>App Store
+              <small>即将上架</small></span
+            >
+            <span class="store"
+              ><svg aria-hidden="true"><use href="#play" /></svg>Google Play
+              <small>即将上架</small></span
+            >
+          </div>
+          <p class="note">iPhone 和安卓版即将上架。</p>
+        </div>
+
+        <ol class="steps">
+          <li>拍下药盒和标签<small>读出药名、用法、有效期</small></li>
+          <li>逐项确认<small>原文和参考译文对照</small></li>
+          <li>设好提醒<small>到时间点一下就记录</small></li>
+        </ol>
+
+        <h2>给全家的药，一个清楚的记录</h2>
+        <ul class="features">
+          <li>
+            <strong>拍照预填</strong
+            ><span
+              >在手机上读出标签上的字和条码，填好药名、规格、用法和有效期。每一项都由你确认，原始照片随时能看。</span
+            >
+          </li>
+          <li>
+            <strong>中英对照，标明参考</strong
+            ><span
+              >常见的用法句子和 1,800
+              多个药名有整理好的中英对照；其余句子可以用手机上的机器翻译。译文都标为参考。</span
+            >
+          </li>
+          <li>
+            <strong>全家的药箱</strong
+            ><span>按家人和分类整理，过期、临期、快用完的药都会标出来，方便你留意。</span>
+          </li>
+          <li>
+            <strong>按时提醒，一点就记</strong
+            ><span
+              >到时间手机会提醒，点「已服」就记下；补记、跳过都可以，每个人的服药记录清清楚楚。</span
+            >
+          </li>
+          <li>
+            <strong>长辈模式</strong
+            ><span
+              >装在长辈自己的手机上：字大，只显示现在该吃的药，一点就记录，还能读出来听。</span
+            >
+          </li>
+          <li>
+            <strong>只在你的手机上，加密保存</strong
+            ><span
+              >不用注册，没有服务器，开发者看不到你的内容。照片不进系统相册，备份用你自己的密码加密。</span
+            >
+          </li>
+        </ul>
+
+        <div class="safety">
+          <strong>请注意</strong>
+          <p>
+            吃药没？帮你记下家里的药，按你设的时间提醒，并提供标签的翻译参考。它不提供医疗建议，不计算剂量，也不判断药能不能一起吃；它不是医疗器械，不诊断、治疗或预防任何疾病。怎么用药，以药房标签和医生、药剂师的说明为准，有疑问请问药剂师或医生。
+          </p>
+        </div>
+
+        <p class="price">
+          免费使用：最多 <strong>3 位家人</strong>（含自己），药品和提醒不限。<strong
+            >Pro 一次买断</strong
+          >：不限家人，没有广告。
+        </p>
+
+        <div class="support">
+          <h2>支持与反馈</h2>
+          <p>
+            有问题或建议，请发邮件至 <a href="mailto:nzcheez@gmail.com">nzcheez@gmail.com</a>。
+          </p>
+          <p><a href="privacy/#zh">隐私政策</a></p>
+        </div>
+      </section>
+
+      <!-- 繁體中文（台灣） -->
+      <section id="zh-tw" lang="zh-TW" data-lang="zh-tw" hidden>
+        <div class="hero">
+          <img src="img/icon.png" alt="吃藥沒？圖示" width="112" height="112" />
+          <h1>吃藥沒？</h1>
+          <p class="tagline">全家的藥，<em>拍一下就記好。</em></p>
+          <p class="lead">
+            拍下藥盒和標籤，App
+            在手機上讀出藥名、規格、用法和有效期限，附上中英對照的參考譯文。你逐項確認後存進家裡的藥箱，再設定好提醒——誰該吃什麼、吃了沒有，一眼就清楚。
+          </p>
+          <div class="stores">
+            <span class="store"
+              ><svg aria-hidden="true"><use href="#apple" /></svg>App Store
+              <small>即將上架</small></span
+            >
+            <span class="store"
+              ><svg aria-hidden="true"><use href="#play" /></svg>Google Play
+              <small>即將上架</small></span
+            >
+          </div>
+          <p class="note">iPhone 和 Android 版即將上架。</p>
+        </div>
+
+        <ol class="steps">
+          <li>拍下藥盒和標籤<small>讀出藥名、用法、有效期限</small></li>
+          <li>逐項確認<small>原文和參考譯文對照</small></li>
+          <li>設定提醒<small>時間到點一下就記錄</small></li>
+        </ol>
+
+        <h2>給全家的藥，一份清楚的記錄</h2>
+        <ul class="features">
+          <li>
+            <strong>拍照預填</strong
+            ><span
+              >在手機上讀出標籤上的字和條碼，填好藥名、規格、用法和有效期限。每一項都由你確認，原始照片隨時看得到。</span
+            >
+          </li>
+          <li>
+            <strong>中英對照，標明參考</strong
+            ><span
+              >常見的用法句子和 1,800
+              多個藥名有整理好的中英對照；其他句子可以用手機上的機器翻譯。譯文都標示為參考。</span
+            >
+          </li>
+          <li>
+            <strong>全家的藥箱</strong
+            ><span>依家人和分類整理，過期、即將到期、快用完的藥都會標出來，方便你留意。</span>
+          </li>
+          <li>
+            <strong>按時提醒，一點就記</strong
+            ><span
+              >時間到手機會提醒，點「已服」就記下；補記、略過都可以，每個人的服藥記錄清清楚楚。</span
+            >
+          </li>
+          <li>
+            <strong>長輩模式</strong
+            ><span
+              >裝在長輩自己的手機上：字大，只顯示現在該吃的藥，一點就記錄，還能唸出來聽。</span
+            >
+          </li>
+          <li>
+            <strong>只在你的手機上，加密保存</strong
+            ><span
+              >不用註冊，沒有伺服器，開發者看不到你的內容。照片不存進系統相簿，備份用你自己的密碼加密。</span
+            >
+          </li>
+        </ul>
+
+        <div class="safety">
+          <strong>請注意</strong>
+          <p>
+            吃藥沒？幫你記下家裡的藥，按你設定的時間提醒，並提供標籤的翻譯參考。它不提供醫療建議，不計算劑量，也不判斷藥能不能一起吃；它不是醫療器材，不診斷、治療或預防任何疾病。怎麼用藥，以藥局標籤和醫師、藥師的說明為準，有疑問請詢問藥師或醫師。
+          </p>
+        </div>
+
+        <p class="price">
+          免費使用：最多 <strong>3 位家人</strong>（含自己），藥品和提醒不限。<strong
+            >Pro 一次買斷</strong
+          >：不限家人，沒有廣告。
+        </p>
+
+        <div class="support">
+          <h2>支援與意見回饋</h2>
+          <p>
+            有問題或建議，請寄信至 <a href="mailto:nzcheez@gmail.com">nzcheez@gmail.com</a>。
+          </p>
+          <p><a href="privacy/#zh-tw">隱私權政策</a></p>
+        </div>
+      </section>
+
+      <!-- 繁體中文（香港） -->
+      <section id="zh-hk" lang="zh-HK" data-lang="zh-hk" hidden>
+        <div class="hero">
+          <img src="img/icon.png" alt="吃藥沒？圖示" width="112" height="112" />
+          <h1>吃藥沒？</h1>
+          <p class="tagline">全家的藥物，<em>拍一張就記好。</em></p>
+          <p class="lead">
+            拍下藥盒和標籤，App
+            在手機上讀出藥名、規格、用法和有效日期，並附上中英對照的參考譯文。你逐項確認後存入家中的藥箱，再設定提醒——誰要吃甚麼藥、吃了沒有，一眼就清楚。
+          </p>
+          <div class="stores">
+            <span class="store"
+              ><svg aria-hidden="true"><use href="#apple" /></svg>App Store
+              <small>即將推出</small></span
+            >
+            <span class="store"
+              ><svg aria-hidden="true"><use href="#play" /></svg>Google Play
+              <small>即將推出</small></span
+            >
+          </div>
+          <p class="note">iPhone 及 Android 版即將推出。</p>
+        </div>
+
+        <ol class="steps">
+          <li>拍下藥盒和標籤<small>讀出藥名、用法、有效日期</small></li>
+          <li>逐項確認<small>原文和參考譯文對照</small></li>
+          <li>設定提醒<small>時間到按一下就記錄</small></li>
+        </ol>
+
+        <h2>給全家的藥物，一份清楚的紀錄</h2>
+        <ul class="features">
+          <li>
+            <strong>拍照預填</strong
+            ><span
+              >在手機上讀出標籤上的文字和條碼，填好藥名、規格、用法和有效日期。每一項都由你確認，原本的相片隨時可以查看。</span
+            >
+          </li>
+          <li>
+            <strong>中英對照，註明參考</strong
+            ><span
+              >常見的用法句子和 1,800
+              多個藥名已整理好中英對照；其他句子可以用手機上的機器翻譯。譯文一律註明為參考。</span
+            >
+          </li>
+          <li>
+            <strong>全家的藥箱</strong
+            ><span>按家人和分類整理，過期、快將到期、快用完的藥物都會標示出來，方便你留意。</span>
+          </li>
+          <li>
+            <strong>準時提醒，一按就記</strong
+            ><span
+              >時間到手機會提醒，按「已服」就記下；補記、略過都可以，每個人的服藥紀錄清清楚楚。</span
+            >
+          </li>
+          <li>
+            <strong>長者模式</strong
+            ><span
+              >裝在長者自己的手機上：字大，只顯示現在要吃的藥，一按就記錄，還可以讀出來聽。</span
+            >
+          </li>
+          <li>
+            <strong>只在你的手機上，加密儲存</strong
+            ><span
+              >毋須註冊，沒有伺服器，開發者看不到你的內容。相片不會存入系統相簿，備份用你自己的密碼加密。</span
+            >
+          </li>
+        </ul>
+
+        <div class="safety">
+          <strong>請注意</strong>
+          <p>
+            吃藥沒？幫你記下家中的藥物，按你設定的時間提醒，並提供標籤的翻譯參考。它不提供醫療建議，不計算劑量，亦不判斷藥物能否一同服用；它並非醫療器械，不會診斷、治療或預防任何疾病。如何用藥，以藥房標籤及醫生、藥劑師的指示為準，如有疑問請向藥劑師或醫生查詢。
+          </p>
+        </div>
+
+        <p class="price">
+          免費使用：最多 <strong>3 位家人</strong>（包括自己），藥物和提醒不限。<strong
+            >Pro 一次買斷</strong
+          >：不限家人，沒有廣告。
+        </p>
+
+        <div class="support">
+          <h2>支援及意見</h2>
+          <p>
+            如有問題或建議，請電郵至 <a href="mailto:nzcheez@gmail.com">nzcheez@gmail.com</a>。
+          </p>
+          <p><a href="privacy/#zh-hk">私隱政策</a></p>
+        </div>
+      </section>
+
+      <!-- English -->
+      <section id="en" lang="en" data-lang="en" hidden>
+        <div class="hero">
+          <img src="img/icon.png" alt="Had Your Meds? icon" width="112" height="112" />
+          <h1>Had Your Meds?</h1>
+          <p class="tagline">Your family's medicines, <em>recorded with a photo.</em></p>
+          <p class="lead">
+            Photograph a medicine box and its label. The app reads the name, strength, directions
+            and expiry on your phone, with reference translations between Chinese and English. Check
+            each item, save it to your family's cabinet and set reminders — then see at a glance who
+            takes what, and whether they have.
+          </p>
+          <div class="stores">
+            <span class="store"
+              ><svg aria-hidden="true"><use href="#apple" /></svg>App Store
+              <small>coming soon</small></span
+            >
+            <span class="store"
+              ><svg aria-hidden="true"><use href="#play" /></svg>Google Play
+              <small>coming soon</small></span
+            >
+          </div>
+          <p class="note">Coming soon to iPhone and Android.</p>
+        </div>
+
+        <ol class="steps">
+          <li>Photograph the box and label<small>name, directions, expiry read</small></li>
+          <li>Check each item<small>the label beside its reference translation</small></li>
+          <li>Set reminders<small>one tap records a dose</small></li>
+        </ol>
+
+        <h2>A clear record of your family's medicines</h2>
+        <ul class="features">
+          <li>
+            <strong>Filled in from a photo</strong
+            ><span
+              >The text and barcode on the label are read on your phone to fill in the name,
+              strength, directions and expiry. You check every item, and the original photo is
+              always there to look at.</span
+            >
+          </li>
+          <li>
+            <strong>Chinese and English, marked as reference</strong
+            ><span
+              >Common directions and over 1,800 medicine names come with prepared Chinese–English
+              references; other sentences can use your phone's machine translation. Every
+              translation is marked as a reference.</span
+            >
+          </li>
+          <li>
+            <strong>The family cabinet</strong
+            ><span
+              >Sorted by person and category, with expired, soon-to-expire and running-low medicines
+              marked so you can keep an eye on them.</span
+            >
+          </li>
+          <li>
+            <strong>Reminders, recorded with a tap</strong
+            ><span
+              >Your phone reminds you on time; tap Taken to record it, or record it later or skip
+              it. Each person's history stays clear.</span
+            >
+          </li>
+          <li>
+            <strong>Elder mode</strong
+            ><span
+              >On an older family member's own phone: large text, only the medicines due now, one tap
+              to record, and it can read them aloud.</span
+            >
+          </li>
+          <li>
+            <strong>Only on your phone, encrypted</strong
+            ><span
+              >No account and no server: the developer never sees your records. Photos stay out of
+              your photo library, and backups are sealed with your own password.</span
+            >
+          </li>
+        </ul>
+
+        <div class="safety">
+          <strong>Please note</strong>
+          <p>
+            Had Your Meds? keeps a record of your family's medicines, reminds you at the times you
+            set and gives translation references for labels. It doesn't give medical advice,
+            calculate doses or check whether medicines can be taken together. It is not a medical
+            device and does not diagnose, treat or prevent any disease. Follow the pharmacy label
+            and your doctor or pharmacist, and ask them if you are unsure.
+          </p>
+        </div>
+
+        <p class="price">
+          Free for up to <strong>3 family members</strong> (you included), with unlimited
+          medicines and reminders. <strong>Pro, one purchase</strong>: no limit on family members,
+          no ads.
+        </p>
+
+        <div class="support">
+          <h2>Support</h2>
+          <p>
+            For questions or feedback, email
+            <a href="mailto:nzcheez@gmail.com">nzcheez@gmail.com</a>.
+          </p>
+          <p><a href="privacy/#en">Privacy policy</a></p>
+        </div>
+      </section>
+
+      <p class="muted">© 2026 Chi Zhang</p>
+    </main>
+    <script>
+      // One language at a time: ?lang= or #, then the browser's; Simplified Chinese by default.
+      (function () {
+        var LANGS = ['zh', 'zh-tw', 'zh-hk', 'en'];
+        var HTML_LANG = { zh: 'zh-CN', 'zh-tw': 'zh-TW', 'zh-hk': 'zh-HK', en: 'en' };
+        var TITLES = {
+          zh: '吃药没？— 全家的药，拍一下就记好',
+          'zh-tw': '吃藥沒？— 全家的藥，拍一下就記好',
+          'zh-hk': '吃藥沒？— 全家的藥物，拍一張就記好',
+          en: 'Had Your Meds? — Your family’s medicines, recorded with a photo',
+        };
+        function fromBrowser() {
+          var b = (navigator.language || 'zh').toLowerCase();
+          if (b.indexOf('zh') !== 0) return 'en';
+          if (/-(hk|mo)\b/.test(b)) return 'zh-hk';
+          if (/-(tw|hant)\b/.test(b)) return 'zh-tw';
+          return 'zh';
+        }
+        var param = (new URLSearchParams(location.search).get('lang') || '').toLowerCase();
+        var hash = location.hash.replace('#', '').toLowerCase();
+        var lang =
+          LANGS.indexOf(param) >= 0 ? param : LANGS.indexOf(hash) >= 0 ? hash : fromBrowser();
+        var buttons = document.querySelectorAll('.lang');
+        function show(next) {
+          lang = next;
+          document.documentElement.lang = HTML_LANG[lang];
+          document.querySelectorAll('[data-lang]').forEach(function (el) {
+            el.hidden = el.getAttribute('data-lang') !== lang;
+          });
+          buttons.forEach(function (b) {
+            b.setAttribute('aria-pressed', b.getAttribute('data-to') === lang ? 'true' : 'false');
+          });
+          document.title = TITLES[lang];
+        }
+        buttons.forEach(function (b) {
+          b.addEventListener('click', function () {
+            show(b.getAttribute('data-to'));
+          });
+        });
+        show(lang);
+      })();
+    </script>
+  </body>
+</html>
