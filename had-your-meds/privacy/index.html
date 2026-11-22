@@ -165,6 +165,9 @@
             地址，只去重和计数，用来编写参考译文；新的参考译文随以后的 App
             更新提供给所有人。长辈模式的手机上不会询问。
           </li>
+          <li>
+            这个服务运行在 Cloudflare 上，不记录请求日志；App 版本、系统和地区设置只按天计数，不和句子放在一起。400 天没有再收到的句子会自动删除。
+          </li>
         </ul>
 
         <h2>错误报告（可以关掉）</h2>
@@ -409,6 +412,9 @@
             IP
             位址，只去除重複和計數，用來編寫參考譯文；新的參考譯文會隨之後的 App
             更新提供給所有人。長輩模式的手機上不會詢問。
+          </li>
+          <li>
+            這個服務在 Cloudflare 上運行，不記錄請求日誌；App 版本、系統和地區設定只按天計數，不和句子放在一起。400 天沒有再收到的句子會自動刪除。
           </li>
         </ul>
 
@@ -655,6 +661,9 @@
             IP
             地址，只會去除重複和計數，用來編寫參考譯文；新的參考譯文會隨日後的 App
             更新提供給所有人。長者模式的手機不會詢問。
+          </li>
+          <li>
+            這個服務在 Cloudflare 上運行，不會記錄請求日誌；App 版本、系統和地區設定只按日計數，不會和句子放在一起。400 日沒有再收到的句子會自動刪除。
           </li>
         </ul>
 
@@ -921,6 +930,11 @@
             addresses and only removes duplicates and counts them, to write reference translations;
             new reference translations reach everyone in later app updates. An elder-mode phone
             never asks.
+          </li>
+          <li>
+            The service runs on Cloudflare with request logs turned off. App version, system and
+            region setting are only counted per day, apart from the sentences. A sentence not
+            received again for 400 days is deleted automatically.
           </li>
         </ul>
 
